@@ -1,0 +1,19 @@
+# PYTHON RESOURCES
+venv
+
+# DATASETS
+ARC-AGI/
+RAVEN/
+BONGARD_LOGO/
+
+# RAW DATASETS
+*.tar.gz
+*.tar
+*.tgz
+*.zip
+
+#C,C++ FILES
+.o
+.d
+.a
+.so
