@@ -2,7 +2,6 @@
 
 An AGI testbed, primarily aimed at testing abstraction and generalization ability, without the limitations of the ARC-AGI corpus.
 
-
 # Datasets
 
 ## ARC-AGI Dataset

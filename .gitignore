@@ -1,5 +1,6 @@
 # PYTHON RESOURCES
 venv
+*__pycache__
 
 # DATASETS
 ARC-AGI/
