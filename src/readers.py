@@ -3,6 +3,10 @@ import json
 import numpy as np
 import matplotlib.pyplot as plt
 
+from dataclasses import dataclass, field
+
+from src.datasets import ARC_Dataset, RAVEN_Dataset
+
 def read_text_file(filename: str):
     with open(filename, 'r') as file_handle:
         text = file_handle.read()
@@ -13,20 +17,7 @@ def read_json_file(filename: str):
        data = json.load(file_handle) 
     return data
 
-def read_npz_file(filename: str):
-    return np.load(filename)
-
-def extract_npz_data(obj):
-    keys = list(obj.keys())
-    return {key: obj[key] for key in keys}
-
-def plot_npz_image(image):
-    fig, axs = plt.subplots(4, 4, figsize=(16, 16))
-    for i in range(16):
-        axs[i // 4, i % 4].imshow(image[i, :, :])
-        axs[i // 4, i % 4].set_title(f'Channel {i}')
-    plt.show()
-    
+@dataclass
 class Reader:
     def __init__(self):
         self.base_data_dir = ""
@@ -40,14 +31,29 @@ class Reader:
 
         self.sub_data_dirs = [os.path.join(data_dir, d) for d in os.listdir(data_dir) if os.path.isdir(os.path.join(data_dir, d))]
 
+    def load(self):
+       raise NotImplementedError() 
+
 class ARC_Reader(Reader):
     def __init__(self):
         Reader.__init__(self)
 
         self.data_directory = os.path.join(os.environ.get('ARC_AGI_BASE'),'data')
+        self.train_directory = os.path.join(self.data_directory, 'training')
+        self.eval_directory = os.path.join(self.data_directory, 'evaluation')
+        self.load()
+
+    def load(self):
+        self.train_dataset = ARC_Dataset(self.train_directory)
+        self.eval_dataset = ARC_Dataset(self.eval_directory)
 
 class RAVEN_Reader(Reader):
     def __init__(self):
         Reader.__init__(self)
 
         self.data_directory = os.path.join(os.environ.get('RAVEN_BASE'),'data')
+        self.load()
+
+    def load(self):
+        self.get_all_sub_data_dirs(intermediate_dir='')
+        self.dataset = RAVEN_Dataset(self.sub_data_dirs)
