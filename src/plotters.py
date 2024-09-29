@@ -1,25 +1,37 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-def plot_npz_image(image):
-    # Plot first 8 images in a 3x3 matrix
-    fig, axs = plt.subplots(3, 3, figsize=(12, 12))
-    for i in range(8):
-        axs[i // 3, i % 3].imshow(image[i, :, :])
-        axs[i // 3, i % 3].set_title(f'Channel {i}')
-    # Remove unused subplot
-    axs[2, 2].axis('off')
-    plt.tight_layout()
+def plot_raven_image(dataset_sample):
+    example_set = dataset_sample["example_set"]
+    candidates = dataset_sample["candidates"]
 
-    # Plot the rest 8 images in a 2x4 matrix
-    fig, axs = plt.subplots(2, 4, figsize=(16, 8))
-    for i in range(8):
-        axs[i // 4, i % 4].imshow(image[i+8, :, :])
-        axs[i // 4, i % 4].set_title(f'Channel {i+8}')
+    # Create a figure with a 5x4 grid of images
+    fig, axs = plt.subplots(5, 4, figsize=(16, 20))
+
+    # Plot example images in top left 9 squares
+    for i in range(example_set.shape[0]):
+        row = i // 3
+        col = i % 3
+        axs[row, col].imshow(example_set[i, :, :])
+        axs[row, col].set_title(f'Example {i}')
+
+    # Plot candidate images in remaining squares
+    for i in range(candidates.shape[0]):
+        row = 3 + i // 4
+        col = i % 4
+        axs[row, col].imshow(candidates[i, :, :])
+        axs[row, col].set_title(f'Candidate {i}')
+
+    # Remove unused axes
+    for i in range(3, 5):
+        for j in range(4):
+            if i * 4 + j >= example_set.shape[0] + candidates.shape[0]:
+                axs[i, j].axis('off')
+
     plt.tight_layout()
     plt.show()
 
-def plot_arc_data(datasample):
+def plot_arc_data(datasample, idx=0):
     # Get the train and test data
     train_data = datasample['train']
     test_data = datasample['test'][0]

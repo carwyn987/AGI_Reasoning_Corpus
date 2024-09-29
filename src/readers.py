@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from dataclasses import dataclass, field
 
 from src.datasets import ARC_Dataset, RAVEN_Dataset
+from src.plotters import *
 
 def read_text_file(filename: str):
     with open(filename, 'r') as file_handle:
@@ -47,6 +48,12 @@ class ARC_Reader(Reader):
         self.train_dataset = ARC_Dataset(self.train_directory)
         self.eval_dataset = ARC_Dataset(self.eval_directory)
 
+    def show(self, idx=0):
+        try:
+            plot_arc_data(self.train_dataset[idx])
+        except:
+            raise ModuleNotFoundError()
+
 class RAVEN_Reader(Reader):
     def __init__(self):
         Reader.__init__(self)
@@ -57,3 +64,9 @@ class RAVEN_Reader(Reader):
     def load(self):
         self.get_all_sub_data_dirs(intermediate_dir='')
         self.dataset = RAVEN_Dataset(self.sub_data_dirs)
+
+    def show(self, idx=0):
+        try:
+            plot_raven_image(self.dataset[idx])
+        except:
+            raise ModuleNotFoundError()
